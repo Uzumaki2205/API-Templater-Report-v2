@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30907.101
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API-Templater-Report", "API-Templater-Report\API-Templater-Report.csproj", "{AF0A8C70-E768-4568-B03B-BD87D5426ADC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AF0A8C70-E768-4568-B03B-BD87D5426ADC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF0A8C70-E768-4568-B03B-BD87D5426ADC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF0A8C70-E768-4568-B03B-BD87D5426ADC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF0A8C70-E768-4568-B03B-BD87D5426ADC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0886A514-BAB0-469B-95E7-879FAD09E09B}
+	EndGlobalSection
+EndGlobal
