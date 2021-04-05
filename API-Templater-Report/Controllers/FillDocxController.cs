@@ -94,9 +94,9 @@ namespace API_Templater_Report.Controllers
                 helper.ProcessDocx(nameTemplate, json);
                 return IsExistFile($"{helper.TimeStamp}.Report.docx");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine(ex.Message);
+                //Console.WriteLine(ex.Message);
                 return new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound };
             }
         }
