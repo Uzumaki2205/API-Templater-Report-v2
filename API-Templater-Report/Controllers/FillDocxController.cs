@@ -51,8 +51,6 @@ namespace API_Templater_Report.Controllers
             else return new HttpResponseMessage(HttpStatusCode.NotFound);
         }
 
-        InfoVuln helper = new InfoVuln();
-
         /// <summary>
         /// Download File
         /// </summary>
@@ -64,7 +62,7 @@ namespace API_Templater_Report.Controllers
 
             if (File.Exists(filePath))
             {
-                HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
+                HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
                 byte[] bytes = File.ReadAllBytes(filePath);
                 response.Content = new ByteArrayContent(bytes);
                 //Set the Response Content Length.
@@ -87,12 +85,12 @@ namespace API_Templater_Report.Controllers
         /// <param name="nameTemplate">Template Name</param>
         /// <param name="json">JSON OBJECT</param>
         [HttpPost]
-        public HttpResponseMessage Generate(string nameTemplate, [FromBody] JObject json)
+        public HttpResponseMessage Generate([FromBody] string nameTemplate, string json)
         {
             try
             {
-                helper.ProcessDocx(nameTemplate, json);
-                return IsExistFile($"{helper.TimeStamp}.Report.docx");
+                InfoVuln.GetInstance().ProcessDocx(nameTemplate, json);
+                return IsExistFile($"{InfoVuln.GetInstance().TimeStamp}.Report.docx");
             }
             catch (Exception)
             {
@@ -100,5 +98,21 @@ namespace API_Templater_Report.Controllers
                 return new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound };
             }
         }
+        //[HttpPost]
+        //public string Generate(string nameTemplate)
+        //{
+        //    //try
+        //    //{
+        //    //    helper.ProcessDocx(nameTemplate, json);
+        //    //    return IsExistFile($"{helper.TimeStamp}.Report.docx");
+        //    //}
+        //    //catch (Exception)
+        //    //{
+        //    //    //Console.WriteLine(ex.Message);
+        //    //    return new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound };
+        //    //}
+
+        //    return nameTemplate;
+        //}
     }
 }

@@ -1,0 +1,43 @@
+﻿@model IEnumerable<API_Templater_Report.Models.FileUpload>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+<select class="form-select form-select-lg mb-3" style="margin-bottom: 20px" aria-label=".form-select-lg example">
+    <option selected>Select Template</option>
+    @foreach (var item in Model)
+    {
+        <option value="@Html.DisplayFor(modelItem => item.FileName)">@Html.DisplayFor(modelItem => item.FileName)</option>
+    }
+</select>
+<br />
+
+@*@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <label class="control-label">Upload Json</label>
+    <div class="form-inline">
+        <input type="file" id="files" name="files" class="form-control" required="required">
+        <button class="btn btn-info" type="submit">Upload</button>
+    </div>
+    <br />*@
+
+@using (Html.BeginForm("UploadFile", "Template", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+
+    <div>
+        @Html.TextBox("files", "", new { type = "file" }) <br />
+
+        <input type="submit" class="btn btn-success" value="Upload" />
+
+        @ViewBag.Message
+
+    </div>
+}
+

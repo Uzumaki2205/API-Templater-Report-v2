@@ -503,12 +503,17 @@
             </summary>
             <param name="fileName">Name of generated file</param>
         </member>
-        <member name="M:API_Templater_Report.Controllers.FillDocxController.Generate(System.String,Newtonsoft.Json.Linq.JObject)">
+        <member name="M:API_Templater_Report.Controllers.FillDocxController.Generate(System.String,System.String)">
             <summary>
             Generate Template
             </summary>
             <param name="nameTemplate">Template Name</param>
             <param name="json">JSON OBJECT</param>
+        </member>
+        <member name="T:API_Templater_Report.Models.FileUpload">
+            <summary>
+            Define File Upload
+            </summary>
         </member>
     </members>
 </doc>

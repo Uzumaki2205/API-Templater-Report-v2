@@ -22,6 +22,22 @@ namespace API_Templater_Report.Models
         private dynamic infoObject { get; set; }
         private dynamic tableObject { get; set; }
 
+        private static InfoVuln _instance;
+
+        public static InfoVuln GetInstance()
+        {
+            if (_instance == null)
+            {
+                _instance = new InfoVuln();
+            }
+            return _instance;
+        }
+
+        private InfoVuln()
+        {
+            TimeStamp = GetTimestamp(DateTime.Now);
+        }
+
         private String GetTimestamp(DateTime value)
         {
             return value.ToString("yyyyMMddHHmmssffff");
@@ -53,9 +69,8 @@ namespace API_Templater_Report.Models
             }
             return value;
         }
-        public void ProcessDocx(string nameTemplate, JObject jObject)
+        public void ProcessDocx(string nameTemplate, string jsonPath)
         {
-            TimeStamp = GetTimestamp(DateTime.Now);
             CreateFolder();
 
             infoObject = new List<Object>();
@@ -73,62 +88,62 @@ namespace API_Templater_Report.Models
             .Include(ImageMaxSize)  //setup image resizing via maxSize(X, Y) metadata
             .Include(ColorConverter)    //setup image from color converter
             .Build();
-            //using (StreamReader r = new StreamReader(json_http))
-            //{
-            //string json = r.ReadToEnd();
-            //JObject jObject = JObject.Parse(json_http);
-
-            using (var doc = factory.Open(HttpContext.Current.Server.MapPath($"~/Renders/{TimeStamp}.Report.docx")))
+            using (StreamReader r = new StreamReader(jsonPath))
             {
-                foreach (JProperty property in jObject.Properties())
+                string json = r.ReadToEnd();
+                JObject jObject = JObject.Parse(json);
+
+                using (var doc = factory.Open(HttpContext.Current.Server.MapPath($"~/Renders/{TimeStamp}.Report.docx")))
                 {
-                    foreach (var item in property)
+                    foreach (JProperty property in jObject.Properties())
                     {
-                        if (item.Type == JTokenType.String)
+                        foreach (var item in property)
                         {
-                            obj_Property.Add(property.Name, property.Value.ToString());
-                        }
-                        else if (item.Type == JTokenType.Object)
-                        {
-                            if (property.Name.ToLower().Equals("chart"))
+                            if (item.Type == JTokenType.String)
                             {
-                                Dictionary<string, object>[] chart = new Dictionary<string, object>[4];
-                                int i = 0;
-                                foreach (JProperty itemChart in item)
-                                {
-                                    chart[i] = new Dictionary<string, object>() { { "name", itemChart.Name }, { "value", itemChart.Value } };
-                                    i++;
-                                }
-                                doc.Process(new[] { new { pie = chart } });
+                                obj_Property.Add(property.Name, property.Value.ToString());
                             }
-                            else // If into JObject have JArray
+                            else if (item.Type == JTokenType.Object)
                             {
-                                foreach (var objArrayProperty in item)
+                                if (property.Name.ToLower().Equals("chart"))
                                 {
-                                    foreach (var objArray in objArrayProperty)
+                                    Dictionary<string, object>[] chart = new Dictionary<string, object>[4];
+                                    int i = 0;
+                                    foreach (JProperty itemChart in item)
                                     {
-                                        temp = ProcessTable(objArray);
+                                        chart[i] = new Dictionary<string, object>() { { "name", itemChart.Name }, { "value", itemChart.Value } };
+                                        i++;
                                     }
+                                    doc.Process(new[] { new { pie = chart } });
                                 }
-                                doc.Process(temp);
+                                else // If into JObject have JArray
+                                {
+                                    foreach (var objArrayProperty in item)
+                                    {
+                                        foreach (var objArray in objArrayProperty)
+                                        {
+                                            temp = ProcessTable(objArray);
+                                        }
+                                    }
+                                    doc.Process(temp);
+                                }
                             }
-                        }
-                        else if (item.Type == JTokenType.Array)
-                        {
-                            temp = ProcessTable(item);
+                            else if (item.Type == JTokenType.Array)
+                            {
+                                temp = ProcessTable(item);
 
-                            infoObject.Add(obj_Property);
+                                infoObject.Add(obj_Property);
 
-                            doc.Process(infoObject);
-                            doc.Process(temp); //bảng
+                                doc.Process(infoObject);
+                                doc.Process(temp); //bảng
+                            }
                         }
                     }
                 }
-            }
 
                 DeleteFolderImage();
                 //Process.Start(new ProcessStartInfo($"{TimeStamp}.docx") { UseShellExecute = true });
-            //}
+            }
         }
 
         private List<Dictionary<string, Object>> ProcessTable(JToken array)
